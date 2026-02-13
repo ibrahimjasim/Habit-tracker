@@ -2,6 +2,7 @@ package com.example.habit_trawcker
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +25,12 @@ class LoginActivity : AppCompatActivity() {
             login(email, password)
         }
 
+        binding.SignUpPart.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, RegisterFragment())
+                .addToBackStack(null)
+                .commit()
+        }
     }
 
     fun login(email: String, password: String){
@@ -33,7 +40,7 @@ class LoginActivity : AppCompatActivity() {
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)
             }.onFailure { error ->
-
+                Toast.makeText(this@LoginActivity, error.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

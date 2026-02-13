@@ -16,6 +16,15 @@ class AuthRepository {
         }
     }
 
+    suspend fun register(email: String, password: String): Result<FirebaseUser> {
+        return try {
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            Result.success(result.user!!)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
     fun signOut() = auth.signOut()
