@@ -2,13 +2,14 @@ package com.example.habit_trawcker
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.habit_trawcker.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val authRepo = AuthRepository()
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.signOutButton.setOnClickListener {
-            authRepo.signOut()
+            authViewModel.signOut()
             val intent = Intent(this, LoginActivity::class.java)
 
             // user kan inte komma tillbacka här
