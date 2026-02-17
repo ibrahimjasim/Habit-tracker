@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Habit-trawcker</string>
+    <string name="inputName" />
+    <string name="inputDescription" />
+</resources>
