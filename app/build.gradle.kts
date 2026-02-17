@@ -10,6 +10,11 @@ android {
         version = release(36)
     }
 
+    viewBinding{
+        enable = true
+    }
+
+
     defaultConfig {
         applicationId = "com.example.habit_trawcker"
         minSdk = 26
@@ -39,6 +44,14 @@ android {
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
+    implementation("com.google.firebase:firebase-auth")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
