@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AlertDialog
 import kotlin.toString
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val recycler = findViewById<RecyclerView>(R.id.habitRecyclerView)
-        val fab = findViewById<FloatingActionButton>(R.id.addHabitFab)
+        val addButton = findViewById<MaterialButton>(R.id.addHabitButton)
 
         adapter = HabitAdapter(mutableListOf())
         recycler.layoutManager = LinearLayoutManager(this)
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        fab.setOnClickListener {
+        addButton.setOnClickListener {
             showAddHabitDialog()
         }
 
