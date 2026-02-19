@@ -6,13 +6,14 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
 class HabitAdapter(
-    private val habits: MutableList<Habit>,
     private val onEditClick: (Habit) -> Unit,
     private val onDeleteClick: (Habit) -> Unit
-) : RecyclerView.Adapter<HabitAdapter.HabitViewHolder>() {
+) : ListAdapter<Habit, HabitAdapter.HabitViewHolder>(HabitDiffCallback()) {
 
     class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val name: TextView = view.findViewById(R.id.habitName)
@@ -29,23 +30,24 @@ class HabitAdapter(
     }
 
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
-        val habit = habits[position]
+        val habit = getItem(position)
         holder.name.text = habit.name
         holder.description.text = habit.description
 
         holder.btnEdit.setOnClickListener { onEditClick(habit) }
         holder.btnDelete.setOnClickListener { onDeleteClick(habit) }
         
-        // Här kan du även hantera checkboxen om du vill spara status
         holder.checkbox.setOnCheckedChangeListener(null)
-        holder.checkbox.isChecked = false // Standardvärde
+        holder.checkbox.isChecked = false 
     }
 
-    override fun getItemCount() = habits.size
+    class HabitDiffCallback : DiffUtil.ItemCallback<Habit>() {
+        override fun areItemsTheSame(oldItem: Habit, newItem: Habit): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    fun updateList(newList: List<Habit>) {
-        habits.clear()
-        habits.addAll(newList)
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: Habit, newItem: Habit): Boolean {
+            return oldItem == newItem
+        }
     }
 }
