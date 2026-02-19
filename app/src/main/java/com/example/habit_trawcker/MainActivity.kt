@@ -31,9 +31,8 @@ class MainActivity : AppCompatActivity() {
             HabitViewModelFactory(repo)
         )[HabitViewModel::class.java]
 
-        // Initialisera adapter med callbacks för Edit och Delete
+        // Uppdaterad skapande av adapter (inga listor skickas med längre)
         adapter = HabitAdapter(
-            mutableListOf(),
             onEditClick = { habit ->
                 showEditHabitDialog(habit)
             },
@@ -47,7 +46,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.habits.collect {
-                adapter.updateList(it)
+                // Använd submitList istället för updateList
+                adapter.submitList(it)
             }
         }
 
