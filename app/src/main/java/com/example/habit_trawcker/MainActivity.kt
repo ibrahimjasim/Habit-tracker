@@ -2,18 +2,14 @@ package com.example.habit_trawcker
 
 import android.os.Bundle
 import android.widget.EditText
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AlertDialog
-import kotlin.toString
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,11 +21,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val recycler = findViewById<RecyclerView>(R.id.habitRecyclerView)
-        val fab = findViewById<FloatingActionButton>(R.id.addHabitFab)
-
-        adapter = HabitAdapter(mutableListOf())
-        recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = adapter
+        val addHabitBtn = findViewById<MaterialButton>(R.id.addHabitFab)
 
         val dao = HabitDatabase.getDatabase(this).habitDao()
         val repo = HabitRepository(dao)
@@ -39,22 +31,33 @@ class MainActivity : AppCompatActivity() {
             HabitViewModelFactory(repo)
         )[HabitViewModel::class.java]
 
+        // Initialisera adapter med callbacks för Edit och Delete
+        adapter = HabitAdapter(
+            mutableListOf(),
+            onEditClick = { habit ->
+                showEditHabitDialog(habit)
+            },
+            onDeleteClick = { habit ->
+                viewModel.deleteHabit(habit)
+            }
+        )
+
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+
         lifecycleScope.launch {
             viewModel.habits.collect {
                 adapter.updateList(it)
             }
         }
 
-        fab.setOnClickListener {
+        addHabitBtn.setOnClickListener {
             showAddHabitDialog()
         }
-
-
     }
 
     private fun showAddHabitDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_add_habit, null)
-
         val nameInput = view.findViewById<EditText>(R.id.inputName)
         val descInput = view.findViewById<EditText>(R.id.inputDescription)
 
@@ -62,14 +65,37 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Add Habit")
             .setView(view)
             .setPositiveButton("Add") { _, _ ->
-                viewModel.addHabit(
-                    nameInput.text.toString(),
-                    descInput.text.toString()
-                )
+                val name = nameInput.text.toString()
+                if (name.isNotEmpty()) {
+                    viewModel.addHabit(
+                        name,
+                        descInput.text.toString()
+                    )
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
+    private fun showEditHabitDialog(habit: Habit) {
+        val view = layoutInflater.inflate(R.layout.dialog_add_habit, null)
+        val nameInput = view.findViewById<EditText>(R.id.inputName)
+        val descInput = view.findViewById<EditText>(R.id.inputDescription)
 
+        nameInput.setText(habit.name)
+        descInput.setText(habit.description)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit Habit")
+            .setView(view)
+            .setPositiveButton("Save") { _, _ ->
+                val updatedHabit = habit.copy(
+                    name = nameInput.text.toString(),
+                    description = descInput.text.toString()
+                )
+                viewModel.updateHabit(updatedHabit)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
 }
