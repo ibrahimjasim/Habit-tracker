@@ -12,5 +12,12 @@ class HabitRepository(
     suspend fun addHabit(habit: Habit) {
         dao.insert(habit)
     }
-}
 
+    suspend fun updateHabit(habit: Habit) {
+        dao.update(habit)
+    }
+
+    suspend fun deleteHabit(habit: Habit) {
+        dao.delete(habit)
+    }
+}
