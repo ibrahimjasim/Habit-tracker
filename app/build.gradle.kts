@@ -2,19 +2,17 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id("com.google.gms.google-services")
-    id("com.google.devtools.ksp") version "2.3.5"
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.example.habit_trawcker"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.habit_trawcker"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -22,8 +20,7 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true          // ← Detta måste vara true!
-        // dataBinding = true       // bara om du använder Data Binding istället
+        viewBinding = true
     }
 
     buildTypes {
@@ -36,18 +33,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
-    /*kotlinOptions {
-        jvmTarget = "11"
-    } */
-
-    kotlin {
-        jvmToolchain(11)
+    kotlinOptions {
+        jvmTarget = "17"
     }
-
-
 }
 
 dependencies {
@@ -64,18 +55,15 @@ dependencies {
     val roomVersion = "2.8.4"
 
     implementation("androidx.room:room-runtime:$roomVersion")
-    implementation("androidx.room:room-ktx:$roomVersion")      // viktigt för Flow och coroutines
+    implementation("androidx.room:room-ktx:$roomVersion")
 
-    // KSP för Room-processor (detta är det som genererar koden)
     ksp("androidx.room:room-compiler:$roomVersion")
-
-    //ksp("androidx.room:room-compiler:${room_version}")   // istället för kapt
 
     val lifecycleVersion = "2.10.0"
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")  //  LiveData
-    implementation("androidx.activity:activity-ktx:1.9.3")  // för lifecycleScope i Activity
-    implementation("androidx.fragment:fragment-ktx:1.8.4")  // fragment
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.activity:activity-ktx:1.9.3")
+    implementation("androidx.fragment:fragment-ktx:1.8.4")
 }
