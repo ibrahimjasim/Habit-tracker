@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Habit-trawcker</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_title">Habitify</string>
+    <string name="add_habit">+ Add Habit</string>
+    <string name="inputName">Name</string>
+    <string name="inputDescription">Description</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
