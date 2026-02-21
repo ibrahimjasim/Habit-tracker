@@ -1,5 +1,6 @@
 package com.example.habit_trawcker
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         val recycler = findViewById<RecyclerView>(R.id.habitRecyclerView)
         val addHabitBtn = findViewById<MaterialButton>(R.id.addHabitFab)
+        val logoutBtn = findViewById<MaterialButton>(R.id.btnLogout)
 
         val dao = HabitDatabase.getDatabase(this).habitDao()
         val repo = HabitRepository(dao)
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             HabitViewModelFactory(repo)
         )[HabitViewModel::class.java]
 
-        // Uppdaterad skapande av adapter (inga listor skickas med längre)
+
         adapter = HabitAdapter(
             onEditClick = { habit ->
                 showEditHabitDialog(habit)
@@ -53,6 +55,13 @@ class MainActivity : AppCompatActivity() {
 
         addHabitBtn.setOnClickListener {
             showAddHabitDialog()
+        }
+
+        logoutBtn.setOnClickListener {
+            // Logga ut genom att gå tillbaka till LoginActivity
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
