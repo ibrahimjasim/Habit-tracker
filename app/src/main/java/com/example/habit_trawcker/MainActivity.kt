@@ -2,6 +2,7 @@ package com.example.habit_trawcker
 
 import android.content.Intent
 import android.os.Bundle
+import com.google.firebase.auth.FirebaseAuth
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -26,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         val logoutBtn = findViewById<MaterialButton>(R.id.btnLogout)
 
         val dao = HabitDatabase.getDatabase(this).habitDao()
-        val repo = HabitRepository(dao)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val repo = HabitRepository(dao, uid)
 
         viewModel = ViewModelProvider(
             this,
