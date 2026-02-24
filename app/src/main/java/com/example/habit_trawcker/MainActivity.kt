@@ -1,5 +1,6 @@
 package com.example.habit_trawcker
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -21,15 +22,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val recycler = findViewById<RecyclerView>(R.id.habitRecyclerView)
-        val addButton = findViewById<MaterialButton>(R.id.addHabitButton)
-
-        //adapter = HabitAdapter(mutableListOf())
-        adapter = HabitAdapter(mutableListOf()) { habit, isChecked ->
-            viewModel.updateCompletion(habit, isChecked)
-        }
-
-        recycler.layoutManager = LinearLayoutManager(this)
-        recycler.adapter = adapter
+        val addHabitBtn = findViewById<MaterialButton>(R.id.addHabitFab)
+        val logoutBtn = findViewById<MaterialButton>(R.id.btnLogout)
 
         val dao = HabitDatabase.getDatabase(this).habitDao()
         val repo = HabitRepository(dao)
@@ -39,22 +33,40 @@ class MainActivity : AppCompatActivity() {
             HabitViewModelFactory(repo)
         )[HabitViewModel::class.java]
 
+        adapter = HabitAdapter(
+            onEditClick = { habit ->
+                showEditHabitDialog(habit)
+            },
+            onDeleteClick = { habit ->
+                viewModel.deleteHabit(habit)
+            },
+            onCheckedChange = { habit, isChecked ->
+                viewModel.updateCompletion(habit, isChecked)
+            }
+        )
+
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+
         lifecycleScope.launch {
             viewModel.habits.collect {
-                adapter.updateList(it)
+                adapter.submitList(it)
             }
         }
 
-        addButton.setOnClickListener {
+        addHabitBtn.setOnClickListener {
             showAddHabitDialog()
         }
 
-
+        logoutBtn.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun showAddHabitDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_add_habit, null)
-
         val nameInput = view.findViewById<EditText>(R.id.inputName)
         val descInput = view.findViewById<EditText>(R.id.inputDescription)
 
@@ -62,14 +74,37 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Add Habit")
             .setView(view)
             .setPositiveButton("Add") { _, _ ->
-                viewModel.addHabit(
-                    nameInput.text.toString(),
-                    descInput.text.toString()
-                )
+                val name = nameInput.text.toString()
+                if (name.isNotEmpty()) {
+                    viewModel.addHabit(
+                        name,
+                        descInput.text.toString()
+                    )
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()
     }
 
+    private fun showEditHabitDialog(habit: Habit) {
+        val view = layoutInflater.inflate(R.layout.dialog_add_habit, null)
+        val nameInput = view.findViewById<EditText>(R.id.inputName)
+        val descInput = view.findViewById<EditText>(R.id.inputDescription)
 
+        nameInput.setText(habit.name)
+        descInput.setText(habit.description)
+
+        AlertDialog.Builder(this)
+            .setTitle("Edit Habit")
+            .setView(view)
+            .setPositiveButton("Save") { _, _ ->
+                val updatedHabit = habit.copy(
+                    name = nameInput.text.toString(),
+                    description = descInput.text.toString()
+                )
+                viewModel.updateHabit(updatedHabit)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
 }

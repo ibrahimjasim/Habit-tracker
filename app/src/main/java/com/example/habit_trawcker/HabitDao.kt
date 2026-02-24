@@ -11,6 +11,12 @@ interface HabitDao {
     @Insert
     suspend fun insert(habit: Habit)
 
+    @Update
+    suspend fun update(habit: Habit)
+
+    @Delete
+    suspend fun delete(habit: Habit)
+
     @Query("SELECT * FROM habits")
     suspend fun getAll(): List<Habit>
 

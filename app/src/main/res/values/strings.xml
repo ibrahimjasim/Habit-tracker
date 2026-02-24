@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">Habit-trawcker</string>
-    <string name="inputName" />
-    <string name="inputDescription" />
-    <string name="add_habit">Add Habit</string>
+    <string name="app_title">Habitify</string>
+    <string name="add_habit">+ Add Habit</string>
+    <string name="inputName">Name</string>
+    <string name="inputDescription">Description</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="logout">Log Out</string>
+    <string name="welcome">Welcome!</string>
+    <string name="log_in">Log In</string>
 </resources>

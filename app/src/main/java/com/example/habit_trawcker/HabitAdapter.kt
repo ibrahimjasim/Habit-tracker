@@ -1,23 +1,28 @@
 package com.example.habit_trawcker
 
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import android.graphics.Paint
 
-class HabitAdapter( private val habits: MutableList<Habit>,
+class HabitAdapter(
+    private val onEditClick: (Habit) -> Unit,
+    private val onDeleteClick: (Habit) -> Unit,
     private val onCheckedChange: (Habit, Boolean) -> Unit
-) : RecyclerView.Adapter<HabitAdapter.HabitViewHolder>() {
+) : ListAdapter<Habit, HabitAdapter.HabitViewHolder>(HabitDiffCallback()) {
 
     class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         val name: TextView = view.findViewById(R.id.habitName)
         val description: TextView = view.findViewById(R.id.habitDescription)
-
-        val checkCompleted: CheckBox = itemView.findViewById(R.id.checkCompleted)
+        val btnEdit: ImageButton = view.findViewById(R.id.btnEdit)
+        val btnDelete: ImageButton = view.findViewById(R.id.btnDelete)
+        val checkCompleted: CheckBox = view.findViewById(R.id.checkCompleted)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
@@ -26,30 +31,25 @@ class HabitAdapter( private val habits: MutableList<Habit>,
         return HabitViewHolder(view)
     }
 
-    /*override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
-        val habit = habits[position]
-
-        holder.name.text = habit.name
-        holder.description.text = habit.description
-        holder.checkCompleted.isChecked = habit.isCompleted
-
-        holder.checkCompleted.setOnCheckedChangeListener { _, isChecked ->
-            onCheckedChange(habit, isChecked)
-        }
-
-    } */
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
-        val habit = habits[position]
+        val habit = getItem(position)
 
         holder.name.text = habit.name
         holder.description.text = habit.description
 
+        // Edit / Delete
+        holder.btnEdit.setOnClickListener { onEditClick(habit) }
+        holder.btnDelete.setOnClickListener { onDeleteClick(habit) }
+
+        // Checkbox
         holder.checkCompleted.setOnCheckedChangeListener(null)
         holder.checkCompleted.isChecked = habit.isCompleted
 
         holder.checkCompleted.setOnCheckedChangeListener { _, isChecked ->
             onCheckedChange(habit, isChecked)
         }
+
+        // Strike-through effect
         if (habit.isCompleted) {
             holder.name.paintFlags =
                 holder.name.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -59,12 +59,13 @@ class HabitAdapter( private val habits: MutableList<Habit>,
         }
     }
 
-    override fun getItemCount() = habits.size
+    class HabitDiffCallback : DiffUtil.ItemCallback<Habit>() {
+        override fun areItemsTheSame(oldItem: Habit, newItem: Habit): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    fun updateList(newList: List<Habit>) {
-        habits.clear()
-        habits.addAll(newList)
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem: Habit, newItem: Habit): Boolean {
+            return oldItem == newItem
+        }
     }
-
 }

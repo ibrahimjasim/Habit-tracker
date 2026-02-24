@@ -16,5 +16,12 @@ class HabitRepository(
     suspend fun updateCompletion(id: Int, completed: Boolean) {
         habitDao.updateCompletion(id, completed)
     }
-}
 
+    suspend fun updateHabit(habit: Habit) {
+        dao.update(habit)
+    }
+
+    suspend fun deleteHabit(habit: Habit) {
+        dao.delete(habit)
+    }
+}
