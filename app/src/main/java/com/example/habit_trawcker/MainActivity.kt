@@ -2,10 +2,7 @@ package com.example.habit_trawcker
 
 import android.os.Bundle
 import android.widget.EditText
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AlertDialog
-import kotlin.toString
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +23,11 @@ class MainActivity : AppCompatActivity() {
         val recycler = findViewById<RecyclerView>(R.id.habitRecyclerView)
         val addButton = findViewById<MaterialButton>(R.id.addHabitButton)
 
-        adapter = HabitAdapter(mutableListOf())
+        //adapter = HabitAdapter(mutableListOf())
+        adapter = HabitAdapter(mutableListOf()) { habit, isChecked ->
+            viewModel.updateCompletion(habit, isChecked)
+        }
+
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 

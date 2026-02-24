@@ -15,5 +15,8 @@ data class Habit(
     val createdDate: Long = System.currentTimeMillis(),
 
     val frequencyType: String = "daily",
-    val targetPerPeriod: Int = 1
+    val targetPerPeriod: Int = 1,
+
+    val isCompleted: Boolean = false   // NY
+
 )

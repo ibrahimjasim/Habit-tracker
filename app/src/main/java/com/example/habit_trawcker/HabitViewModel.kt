@@ -20,4 +20,10 @@ class HabitViewModel(
             )
         }
     }
+
+    fun updateCompletion(habit: Habit, completed: Boolean) {
+        viewModelScope.launch {
+            repository.updateCompletion(habit.id, completed)
+        }
+    }
 }
