@@ -38,4 +38,8 @@ class HabitViewModel(
             repository.deleteHabit(habit)
         }
     }
+
+    suspend fun syncAndClearHabits(){
+        repository.syncAndClear()
+    }
 }

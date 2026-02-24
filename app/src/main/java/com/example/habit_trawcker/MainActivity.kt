@@ -60,10 +60,17 @@ class MainActivity : AppCompatActivity() {
         }
 
         logoutBtn.setOnClickListener {
+            lifecycleScope.launch {
+                viewModel.syncAndClearHabits()
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
             // Logga ut genom att gå tillbaka till LoginActivity
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            //val intent = Intent(this, LoginActivity::class.java)
+
+            //startActivity(intent)
+            //finish()
         }
     }
 

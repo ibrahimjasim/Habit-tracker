@@ -42,4 +42,14 @@ class HabitRepository(
             habits.forEach { dao.insert(it) }
         }
     }
+
+    suspend fun syncAndClear() {
+        val localHabits = dao.getAll()
+        for (habit in localHabits){
+            collection.document(habit.id.toString()).set(habit).await()
+        }
+        dao.clearAll()
+    }
+
+
 }
