@@ -18,10 +18,10 @@ class HabitRepository(
     }
 
     suspend fun updateHabit(habit: Habit) {
-        dao.update(habit)
+        habitDao.update(habit)
     }
 
     suspend fun deleteHabit(habit: Habit) {
-        dao.delete(habit)
+        habitDao.delete(habit)
     }
 }
