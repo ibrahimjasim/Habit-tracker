@@ -33,13 +33,15 @@ class MainActivity : AppCompatActivity() {
             HabitViewModelFactory(repo)
         )[HabitViewModel::class.java]
 
-
         adapter = HabitAdapter(
             onEditClick = { habit ->
                 showEditHabitDialog(habit)
             },
             onDeleteClick = { habit ->
                 viewModel.deleteHabit(habit)
+            },
+            onCheckedChange = { habit, isChecked ->
+                viewModel.updateCompletion(habit, isChecked)
             }
         )
 
@@ -48,7 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.habits.collect {
-                // Använd submitList istället för updateList
                 adapter.submitList(it)
             }
         }
@@ -58,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         logoutBtn.setOnClickListener {
-            // Logga ut genom att gå tillbaka till LoginActivity
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()

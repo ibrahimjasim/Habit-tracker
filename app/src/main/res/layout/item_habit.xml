@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="1dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
 
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="12dp">
+
+        <!-- Icon -->
         <View
             android:id="@+id/iconIndicator"
             android:layout_width="32dp"
@@ -22,15 +26,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Checkbox under icon -->
+        <CheckBox
+            android:id="@+id/checkCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="-4dp"
+            android:buttonTint="@color/brand_green"
+            app:layout_constraintStart_toStartOf="@id/iconIndicator"
+            app:layout_constraintTop_toBottomOf="@id/iconIndicator" />
+
+        <!-- Text container -->
         <LinearLayout
             android:id="@+id/textContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="12dp"
             android:orientation="vertical"
-            app:layout_constraintEnd_toStartOf="@+id/checkbox"
-            app:layout_constraintStart_toEndOf="@+id/iconIndicator"
+            app:layout_constraintStart_toEndOf="@id/iconIndicator"
+            app:layout_constraintEnd_toStartOf="@id/buttonContainer"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
@@ -49,24 +64,15 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/brand_green"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- Edit and Delete Buttons at the bottom -->
+        <!-- Edit / Delete buttons -->
         <LinearLayout
             android:id="@+id/buttonContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textContainer">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageButton
                 android:id="@+id/btnEdit"
