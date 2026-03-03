@@ -1,5 +1,6 @@
 package com.example.habit_trawcker
 
+import android.content.res.ColorStateList
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
@@ -7,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 
 class HabitAdapter(
     private val onEditClick: (Habit) -> Unit,
@@ -18,6 +21,8 @@ class HabitAdapter(
 ) : ListAdapter<Habit, HabitAdapter.HabitViewHolder>(HabitDiffCallback()) {
 
     class HabitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val card: MaterialCardView = view as MaterialCardView
+        val iconIndicator: View = view.findViewById(R.id.iconIndicator)
         val name: TextView = view.findViewById(R.id.habitName)
         val description: TextView = view.findViewById(R.id.habitDescription)
         val btnEdit: ImageButton = view.findViewById(R.id.btnEdit)
@@ -47,6 +52,24 @@ class HabitAdapter(
 
         holder.checkCompleted.setOnCheckedChangeListener { _, isChecked ->
             onCheckedChange(habit, isChecked)
+        }
+
+        // Bad habit card tinting
+        val ctx = holder.itemView.context
+        if (habit.isBad) {
+            holder.card.setCardBackgroundColor(
+                ContextCompat.getColor(ctx, R.color.bad_habit_red)
+            )
+            holder.iconIndicator.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(ctx, R.color.bad_habit_icon)
+            )
+        } else {
+            holder.card.setCardBackgroundColor(
+                ContextCompat.getColor(ctx, R.color.white)
+            )
+            holder.iconIndicator.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(ctx, R.color.brand_green)
+            )
         }
 
         // Strike-through effect
