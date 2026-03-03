@@ -17,6 +17,8 @@ data class Habit(
     val frequencyType: String = "daily",
     val targetPerPeriod: Int = 1,
 
-    val isCompleted: Boolean = false   // NY
+    val isCompleted: Boolean = false,   // NY()
+
+    val isBad: Boolean = false,
 
 )
