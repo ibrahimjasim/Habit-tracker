@@ -25,7 +25,7 @@ class HabitViewModel(
 
     fun updateCompletion(habit: Habit, completed: Boolean) {
         viewModelScope.launch {
-            repository.updateCompletion(habit.id, completed)
+            repository.updateHabit(habit.copy(isCompleted = completed))
         }
     }
 
@@ -41,7 +41,9 @@ class HabitViewModel(
         }
     }
 
-    suspend fun syncAndClearHabits(){
-        repository.syncAndClear()
+    fun syncAndClearHabits() {
+        viewModelScope.launch {
+            repository.syncAndClear()
+        }
     }
 }

@@ -10,6 +10,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import androidx.appcompat.app.AlertDialog
 

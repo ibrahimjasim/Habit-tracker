@@ -2,6 +2,7 @@ package com.example.habit_trawcker
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.firebase.firestore.PropertyName
 
 @Entity(tableName = "habits")
 data class Habit(
@@ -17,8 +18,10 @@ data class Habit(
     val frequencyType: String = "daily",
     val targetPerPeriod: Int = 1,
 
-    val isCompleted: Boolean = false,   // NY()
+    @get:PropertyName("isCompleted") @set:PropertyName("isCompleted")
+    var isCompleted: Boolean = false,
 
-    val isBad: Boolean = false,
+    @get:PropertyName("isBad") @set:PropertyName("isBad")
+    var isBad: Boolean = false,
 
 )
