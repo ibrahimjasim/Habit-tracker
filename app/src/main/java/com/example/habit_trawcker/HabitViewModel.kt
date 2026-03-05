@@ -10,9 +10,14 @@ class HabitViewModel(
 
     val habits = repository.allHabits
 
-    fun addHabit(name: String, description: String, isBad: Boolean = false) {
+    fun syncHabits() {
         viewModelScope.launch {
             repository.syncFromFirestore()
+        }
+    }
+
+    fun addHabit(name: String, description: String, isBad: Boolean = false) {
+        viewModelScope.launch {
             repository.addHabit(
                 Habit(
                     name = name,
@@ -41,9 +46,7 @@ class HabitViewModel(
         }
     }
 
-    fun syncAndClearHabits() {
-        viewModelScope.launch {
-            repository.syncAndClear()
-        }
+    suspend fun syncAndClearHabits() {
+        repository.syncAndClear()
     }
 }

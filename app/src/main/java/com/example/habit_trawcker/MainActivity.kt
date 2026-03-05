@@ -51,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
+        viewModel.syncHabits()
+
         lifecycleScope.launch {
             viewModel.habits.collect {
                 adapter.submitList(it)
@@ -62,10 +64,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         logoutBtn.setOnClickListener {
-            viewModel.syncAndClearHabits()
-            val intent = Intent(this@MainActivity, LoginActivity::class.java)
-            startActivity(intent)
-            finish()
+            lifecycleScope.launch {
+                viewModel.syncAndClearHabits()
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
         }
     }
 
