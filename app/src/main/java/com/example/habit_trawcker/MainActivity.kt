@@ -2,8 +2,8 @@ package com.example.habit_trawcker
 
 import android.content.Intent
 import android.os.Bundle
-import com.google.firebase.auth.FirebaseAuth
 import android.widget.EditText
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -35,13 +35,15 @@ class MainActivity : AppCompatActivity() {
             HabitViewModelFactory(repo)
         )[HabitViewModel::class.java]
 
-
         adapter = HabitAdapter(
             onEditClick = { habit ->
                 showEditHabitDialog(habit)
             },
             onDeleteClick = { habit ->
                 viewModel.deleteHabit(habit)
+            },
+            onCheckedChange = { habit, isChecked ->
+                viewModel.updateCompletion(habit, isChecked)
             }
         )
 
@@ -50,7 +52,6 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             viewModel.habits.collect {
-                // Använd submitList istället för updateList
                 adapter.submitList(it)
             }
         }
@@ -60,17 +61,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         logoutBtn.setOnClickListener {
-            lifecycleScope.launch {
-                viewModel.syncAndClearHabits()
-                val intent = Intent(this@MainActivity, LoginActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-            // Logga ut genom att gå tillbaka till LoginActivity
-            //val intent = Intent(this, LoginActivity::class.java)
-
-            //startActivity(intent)
-            //finish()
+            viewModel.syncAndClearHabits()
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -78,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_add_habit, null)
         val nameInput = view.findViewById<EditText>(R.id.inputName)
         val descInput = view.findViewById<EditText>(R.id.inputDescription)
+        val switchIsBad = view.findViewById<Switch>(R.id.switchIsBad)
 
         AlertDialog.Builder(this)
             .setTitle("Add Habit")
@@ -87,7 +82,8 @@ class MainActivity : AppCompatActivity() {
                 if (name.isNotEmpty()) {
                     viewModel.addHabit(
                         name,
-                        descInput.text.toString()
+                        descInput.text.toString(),
+                        switchIsBad.isChecked
                     )
                 }
             }
@@ -99,9 +95,11 @@ class MainActivity : AppCompatActivity() {
         val view = layoutInflater.inflate(R.layout.dialog_add_habit, null)
         val nameInput = view.findViewById<EditText>(R.id.inputName)
         val descInput = view.findViewById<EditText>(R.id.inputDescription)
+        val switchIsBad = view.findViewById<Switch>(R.id.switchIsBad)
 
         nameInput.setText(habit.name)
         descInput.setText(habit.description)
+        switchIsBad.isChecked = habit.isBad
 
         AlertDialog.Builder(this)
             .setTitle("Edit Habit")
@@ -109,7 +107,8 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Save") { _, _ ->
                 val updatedHabit = habit.copy(
                     name = nameInput.text.toString(),
-                    description = descInput.text.toString()
+                    description = descInput.text.toString(),
+                    isBad = switchIsBad.isChecked
                 )
                 viewModel.updateHabit(updatedHabit)
             }

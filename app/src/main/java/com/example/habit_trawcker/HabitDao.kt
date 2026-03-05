@@ -22,6 +22,10 @@ interface HabitDao {
     @Query("SELECT * FROM habits ORDER BY createdDate DESC")
     fun getAllFlow(): Flow<List<Habit>>
 
+    // Added Mark as completed
+    @Query("UPDATE habits SET isCompleted = :completed WHERE id = :id")
+    suspend fun updateCompletion(id: Int, completed: Boolean)
+
     @Query("DELETE FROM habits")
     suspend fun clearAll()
 }

@@ -9,10 +9,6 @@ class HabitRepository(
     private val dao: HabitDao,
     private val userId: String
 ) {
-    private val collection = FirebaseFirestore.getInstance()
-        .collection("users")
-        .document(userId)
-        .collection("habits")
 
     val allHabits: Flow<List<Habit>> = dao.getAllFlow()
 

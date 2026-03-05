@@ -10,20 +10,22 @@ class HabitViewModel(
 
     val habits = repository.allHabits
 
-    init {
+    fun addHabit(name: String, description: String, isBad: Boolean = false) {
         viewModelScope.launch {
             repository.syncFromFirestore()
-        }
-    }
-
-    fun addHabit(name: String, description: String) {
-        viewModelScope.launch {
             repository.addHabit(
                 Habit(
                     name = name,
-                    description = description
+                    description = description,
+                    isBad = isBad
                 )
             )
+        }
+    }
+
+    fun updateCompletion(habit: Habit, completed: Boolean) {
+        viewModelScope.launch {
+            repository.updateCompletion(habit.id, completed)
         }
     }
 
