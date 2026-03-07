@@ -7,4 +7,6 @@
     <color name="brand_blue">#3F51B5</color>
     <color name="background_gray">#F5F5F5</color>
     <color name="text_gray">#757575</color>
+    <color name="bad_habit_red">#FFCDD2</color>
+    <color name="bad_habit_icon">#E57373</color>
 </resources>

@@ -3,21 +3,25 @@ package com.example.habit_trawcker
 import kotlinx.coroutines.flow.Flow
 
 class HabitRepository(
-    private val dao: HabitDao
+    private val habitDao: HabitDao
 ) {
 
     val allHabits: Flow<List<Habit>> =
-        dao.getAllFlow()
+        habitDao.getAllFlow()
 
     suspend fun addHabit(habit: Habit) {
-        dao.insert(habit)
+        habitDao.insert(habit)
+    }
+
+    suspend fun updateCompletion(id: Int, completed: Boolean) {
+        habitDao.updateCompletion(id, completed)
     }
 
     suspend fun updateHabit(habit: Habit) {
-        dao.update(habit)
+        habitDao.update(habit)
     }
 
     suspend fun deleteHabit(habit: Habit) {
-        dao.delete(habit)
+        habitDao.delete(habit)
     }
 }
